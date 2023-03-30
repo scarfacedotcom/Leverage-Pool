@@ -71,7 +71,7 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
-struct UserInfo {
+    struct UserInfo {
         uint256 index;
         Action[] actions;
         int256 withdrawableCollateral;
@@ -116,4 +116,13 @@ struct UserInfo {
         int256 liquidityPoolFundingRate;
         int256 rebalanceRate;
         int256 rebalanceLiquidityPoolRate;
-    }`
+    }
+    
+    `
+
+
+### UserInfo Struct
+* index: The index of the user in the users array.
+* actions: An array of Action structs representing the user's actions in the leverage pool.
+* withdrawableCollateral: The amount of collateral that the user can withdraw.
+* shares: A mapping of epoch numbers to the user's shares in the leverage pool.
