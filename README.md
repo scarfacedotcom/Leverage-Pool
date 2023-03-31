@@ -646,18 +646,45 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
     **This external view function gets the withdrawable collateral for the given user. It requires the address of the user as a parameter but does not update bookkeeping information. It returns an int256 value representing the withdrawable collateral.
 
-`
-
-    withdrawAdminFees(int256 amount)
 
 `
 
-    **This external function is used to withdraw admin fees from the protocol. It can only be called by the admin and requires the amount to be withdrawn to be less than or equal to the admin fees. If the protocol is using a collateral token, then a transfer of the withdrawn amount is attempted to the admin's address.
+    getRates()
 
 `
 
-    _addPool(int256 leverage, bool isLiquidityPool)
+    **This is an external view function that retrieves the current funding and rebalancing rates. It returns a Rates struct with the current rates. It internally calls the _calculatePoolAmounts() function to get the current pool amounts and then calls the getRates() function with this parameter.
+
 
 `
 
-    **This internal function is used to add a new pool to the protocol. It requires a leverage ratio and a boolean flag to specify whether the pool is a liquidity pool or not. It does not return any values.
+    getNoPools()
+
+`
+
+    **This is an external view function that returns the number of pools currently in the protocol. It returns a uint256 value representing the length of the pools array.
+`
+
+    _bookKeeping(address user)
+
+`
+
+    **This is an internal function that does the bookkeeping for the current user, by applying the deposits and withdrawals of all epochs that have passed. It requires the address of the user as a parameter. It retrieves the UserInfo struct for the given user and iterates through their actions array. For each action that has an epoch less than or equal to the current epoch, it retrieves the PoolEpochData struct for that epoch and pool, and applies the deposit or withdrawal to the user's shares or withdrawable collateral, respectively. It then deletes the action from the actions array and increments the user's index value.
+
+`
+
+    function _startNextEpoch() internal 
+
+`
+
+    ** The function _startNextEpoch() is used to initiate a new epoch in the liquidity pool, and it comprises several steps.
+
+    ** The first step is to check if the current time has exceeded the epoch start time plus the epoch period, signaling that a new epoch should begin. If the condition is met, the epoch number is incremented, an Epoch event is emitted, and the epoch start time is updated to the start of the new epoch.
+
+    ** The second step applies the price change over the last epoch to all pools. This is done iteratively if the price change is more than a set threshold. The function calculates the amount of change to apply to each pool based on their leverage, and the change is applied to each pool's collateral.
+
+    ** The third step applies funding and rebalance rates for all the pools. The function calculates the amount of funding and rebalance rates to apply to each pool based on their leverage and then subtracts the calculated amount from each pool's collateral.
+
+    ** The fourth step involves deposits and withdrawals. The function calculates the actual leverage of each pool and applies a transaction fee based on the actual leverage. If a deposit is made, the function calculates the number of shares to give to the depositor and updates the pool's share count and collateral. If a withdrawal is made, the function calculates the number of shares to burn and updates the pool's share count and collateral.
+
+    ** Finally, the function calculates the total fees charged during the epoch and distributes them proportionally among the liquidity pools.
