@@ -49,21 +49,21 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
-- admin: The address of the administrator of the contract.
-- collateralToken: An instance of the ERC-20 token contract used as collateral for the leverage pool.
-- oracle: An instance of the Oracle contract used to get the price of the underlying asset.
-- fundingRateModel: An instance of the funding rate model used to calculate the funding rates.
-- epochStartTime: The timestamp of the start of the current epoch.
-- epoch: The current epoch number.
-- price: The price of the underlying asset.
-- adminFees: The percentage of the admin fees.
-- PRECISION: A constant value for precision calculations.
-- SECONDS_PER_YEAR: A constant value for the number of seconds in a year.
-- TRANSACTION_FEE: The percentage of the transaction fee.
-- LIQUIDITYPOOL_FEES: The percentage of the liquidity pool fees.
-- CHANGE_CAP: The maximum percentage of the change in the price of the underlying asset.
-- epochPeriod: The duration of an epoch in seconds.
-- waitPeriod: The duration of the wait period in seconds.
+    - admin: The address of the administrator of the contract.
+    - collateralToken: An instance of the ERC-20 token contract used as collateral for the leverage pool.
+    - oracle: An instance of the Oracle contract used to get the price of the underlying asset.
+    - fundingRateModel: An instance of the funding rate model used to calculate the funding rates.
+    - epochStartTime: The timestamp of the start of the current epoch.
+    - epoch: The current epoch number.
+    - price: The price of the underlying asset.
+    - adminFees: The percentage of the admin fees.
+    - PRECISION: A constant value for precision calculations.
+    - SECONDS_PER_YEAR: A constant value for the number of seconds in a year.
+    - TRANSACTION_FEE: The percentage of the transaction fee.
+    - LIQUIDITYPOOL_FEES: The percentage of the liquidity pool fees.
+    - CHANGE_CAP: The maximum percentage of the change in the price of the underlying asset.
+    - epochPeriod: The duration of an epoch in seconds.
+    - waitPeriod: The duration of the wait period in seconds.
 
 `
 
@@ -129,60 +129,60 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 #### A struct that stores user-specific information such as their index, actions, withdrawable collateral, and shares.
 
-- index: The index of the user in the users array.
-- actions: An array of Action structs representing the user's actions in the leverage pool.
-- withdrawableCollateral: The amount of collateral that the user can withdraw.
-- shares: A mapping of epoch numbers to the user's shares in the leverage pool.
+    - index: The index of the user in the users array.
+    - actions: An array of Action structs representing the user's actions in the leverage pool.
+    - withdrawableCollateral: The amount of collateral that the user can withdraw.
+    - shares: A mapping of epoch numbers to the user's shares in the leverage pool.
 
 ### Action Struct
 
 #### A struct that stores user actions such as deposits and withdrawals.
 
-- epoch: The epoch number when the action was taken.
-- pool: The index of the pool in the pools array.
-- depositAmount: The amount of collateral deposited.
-- withdrawAmount: The amount of collateral withdrawn.
+    - epoch: The epoch number when the action was taken.
+    - pool: The index of the pool in the pools array.
+    - depositAmount: The amount of collateral deposited.
+    - withdrawAmount: The amount of collateral withdrawn.
 
 ### Pool Struct
 
 #### A struct that stores information about each pool, such as the number of shares, collateral, leverage, and whether it is a liquidity pool
 
-- shares: The total number of shares in the pool.
-- collateral: The total amount of collateral in the pool.
-- leverage: The leverage ratio of the pool.
-- rebalanceMultiplier: The multiplier used for rebalancing the pool.
-- isLiquidityPool: A boolean flag indicating whether the pool is a liquidity pool.
+    - shares: The total number of shares in the pool.
+    - collateral: The total amount of collateral in the pool.
+    - leverage: The leverage ratio of the pool.
+    - rebalanceMultiplier: The multiplier used for rebalancing the pool.
+    - isLiquidityPool: A boolean flag indicating whether the pool is a liquidity pool.
 
 ### PoolEpochData
 
 #### A struct that stores information about each pool at each epoch, such as shares per collateral deposit, collateral per share withdrawal, and deposits and withdrawals.
 
-- sharesPerCollateralDeposit: The number of shares received per unit of collateral deposited.
-- collateralPerShareWithdraw: The amount of collateral received per share withdrawn.
-- deposits: The total amount of collateral deposited.
-- withdrawals: The total amount of collateral withdrawn.
+    - sharesPerCollateralDeposit: The number of shares received per unit of collateral deposited.
+    - collateralPerShareWithdraw: The amount of collateral received per share withdrawn.
+    - deposits: The total amount of collateral deposited.
+    - withdrawals: The total amount of collateral withdrawn.
 
 ### PoolAmounts
 
 #### A struct that stores the different amounts associated with each pool, such as long and short amounts, liquidity pool amount, rebalance amount, and leverage.
 
-- longAmount: The amount of collateral borrowed for a long position.
-- shortAmount: The amount of collateral borrowed for a short position.
-- liquidityPoolAmount: The amount of collateral in the liquidity pool.
-- rebalanceAmount: The amount of collateral used for rebalancing the pool.
-- longLeverage: The leverage ratio for the long position.
-- shortLeverage: The leverage ratio for the short position.
-- liquidityPoolLeverage: The leverage ratio for the liquidity pool.
+    - longAmount: The amount of collateral borrowed for a long position.
+    - shortAmount: The amount of collateral borrowed for a short position.
+    - liquidityPoolAmount: The amount of collateral in the liquidity pool.
+    - rebalanceAmount: The amount of collateral used for rebalancing the pool.
+    - longLeverage: The leverage ratio for the long position.
+    - shortLeverage: The leverage ratio for the short position.
+    - liquidityPoolLeverage: The leverage ratio for the liquidity pool.
 
 ### Rates
 
 #### A struct that stores the different funding rates associated with each pool, such as long, short, liquidity pool, rebalance, and rebalance liquidity pool rates.
 
-- longFundingRate: The funding rate for the long position.
-- shortFundingRate: The funding rate for the short position.
-- liquidityPoolFundingRate: The funding rate for the liquidity pool.
-- rebalanceRate: The rebalance rate.
-- `rebalanceLiquidity
+    - longFundingRate: The funding rate for the long position.
+    - shortFundingRate: The funding rate for the short position.
+    - liquidityPoolFundingRate: The funding rate for the liquidity pool.
+    - rebalanceRate: The rebalance rate.
+    - `rebalanceLiquidity
 
 ## Constructor
 
@@ -207,10 +207,10 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 ## The constructor takes in four parameters:
 
-- \_collateralToken: The address of the ERC20 token used as collateral for the contract.
-- \_oracle: The address of the Oracle contract used to obtain the current price of the underlying asset.
-- \_fundingRateModel: The address of the funding rate model contract used to calculate the funding rates for the contracts.
-- \_inception: The time (in Unix timestamp) at which the contract was deployed. If set to 0, the current block timestamp is used instead.
+    - _collateralToken: The address of the ERC20 token used as collateral for the contract.
+    - _oracle: The address of the Oracle contract used to obtain the current price of the underlying asset.
+    - _fundingRateModel: The address of the funding rate model contract used to calculate the funding rates for the contracts.
+    - _inception: The time (in Unix timestamp) at which the contract was deployed. If set to 0, the current block timestamp is used instead.
 
 ### Here's a breakdown of what happens in the constructor:
 
@@ -222,8 +222,6 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
   ## ========== EXTERNAL STATE CHANGING ==========
 
              ##    Schedule a deposit for the next epoch
-
-
 
       ### 1. The deposit function
 
@@ -262,9 +260,12 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
-- The deposit function is an external state-changing function that schedules a deposit for the next epoch. It takes two parameters: amount of type int256 and pool of type uint256. The function first checks if the specified pool is initialized and if the amount is positive. Then it performs some bookkeeping, initializes a new Action struct and adds it to the user's actions array. The function also updates the deposits value in the poolEpochData mapping for the specified pool and epoch. Finally, the function emits a DepositInPool event with the msg.sender, amount, pool, and epoch as parameters.
+    - The deposit function is an external state-changing function that schedules a deposit for the next epoch. It takes two parameters: amount of type int256 and pool of type uint256. The function first checks if the specified pool is initialized and if the amount is positive. Then it performs some bookkeeping, initializes a new Action struct and adds it to the user's actions array. The function also updates the deposits value in the poolEpochData mapping for the specified pool and epoch. Finally, the function emits a DepositInPool event with the msg.sender, amount, pool, and epoch as parameters.
 
-            ##  Schedule a withdraw for the next epoch
+    
+    
+    
+    **  Schedule a withdraw for the next epoch
 
 `
 
@@ -290,11 +291,11 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
-- This function withdraws a specified amount of shares from a given pool. The withdrawal is scheduled for the next epoch. The function checks if the pool is initialized and if the amount is positive. \_bookKeeping function is called to update the user's bookkeeping.
+    * This function withdraws a specified amount of shares from a given pool. The withdrawal is scheduled for the next epoch. The function checks if the pool is initialized and if the amount is positive. _bookKeeping function is called to update the user's bookkeeping.
 
-  The userInfo mapping is used to ensure that the user has enough shares to withdraw. If the user has enough shares, the specified amount is subtracted from their share balance. An Action struct is created to store the details of the withdrawal and pushed to the user's actions array.
+    The userInfo mapping is used to ensure that the user has enough shares to withdraw. If the user has enough shares, the specified amount is subtracted from their share balance. An Action struct is created to store the details of the withdrawal and pushed to the user's actions array.
 
-  The poolEpochData mapping is used to update the withdrawal amount for the next epoch in the specified pool. Finally, an WithdrawFromPool event is emitted with the user's address, the amount, the pool, and the epoch in which the withdrawal will occur.
+    The poolEpochData mapping is used to update the withdrawal amount for the next epoch in the specified pool. Finally, an WithdrawFromPool event is emitted with the user's address, the amount, the pool, and the epoch in which the withdrawal will occur.
 
         ##   Withdraw available collateral to the user
 
@@ -315,12 +316,9 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
-    **  The function allows users to withdraw available collateral to their accounts. If amount is not provided, the function withdraws all the withdrawable collateral. The function first calls _bookKeeping to update the user's information. Then it checks if the user's withdrawable collateral is greater than or equal to the requested amount. If yes, it deducts the amount from the user's withdrawable collateral and transfers the same amount to the user's account if amount is greater than zero and the collateralToken address is not equal to address(0x0).
+    * The function allows users to withdraw available collateral to their accounts. If amount is not provided, the function withdraws all the withdrawable collateral. The function first calls _bookKeeping to update the user's information. Then it checks if the user's withdrawable collateral is greater than or equal to the requested amount. If yes, it deducts the amount from the user's withdrawable collateral and transfers the same amount to the user's account if amount is greater than zero and the collateralToken address is not equal to address(0x0).
 
-
-    
-
-## Start a new epoch external call, free to call
+    ## Start a new epoch external call, free to call
 
 
 `
@@ -329,6 +327,8 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
         _startNextEpoch();
     }
 `
+
+    **  This function starts a new epoch. It is an external function that   can be called by anyone. It simply calls the internal _startNextEpoch() function to start the new epoch.
     
         ##   Withdraw admin fees
 `
@@ -342,6 +342,8 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
+    *  This function allows the admin to withdraw admin fees. It is an external function that takes an amount parameter indicating how much to withdraw. The function requires that the caller is the admin and that the amount being withdrawn is less than or equal to the current admin fees. If these requirements are met, the admin fees are reduced by the specified amount and the collateral is transferred to the admin's address, if applicable.
+
 
        ## Do the bookkeeping for a user (for testing)
 
@@ -352,4 +354,8 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
     }
 
 `
+
+    *  This function performs bookkeeping for a user. It is an external function that can be called by anyone. It simply calls the internal _bookKeeping() function to perform the bookkeeping for the user who called the function.
+
+
     
