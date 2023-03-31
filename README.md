@@ -441,3 +441,90 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
     ** The withdraw function allows a user to schedule a withdrawal for the next epoch. It takes two parameters, an amount and a pool ID. The function checks that the pool ID is valid and that the requested amount is not negative. Then, it calls the _bookKeeping function, which performs some internal bookkeeping. Next, the function checks that the user has enough shares in the pool to withdraw the requested amount. If so, the shares are reduced by the requested amount, an action is created and added to the user's actions array, and the amount is added to the total withdrawals for the pool epoch data. Finally, the function emits a WithdrawFromPool event to indicate the withdrawal.
 
     
+`
+        Withdraw available collateral to the user
+`
+
+`
+
+    function withdrawCollateral(int256 amount) external  {
+        require (amount>=0,"amount needs to be positive");
+        _bookKeeping(msg.sender);
+        UserInfo storage  info =  userInfo[msg.sender];
+        if (amount<=0) amount = info.withdrawableCollateral; // withdraw all
+        
+        require (info.withdrawableCollateral>=amount,"Balance to low");
+        info.withdrawableCollateral-=amount;
+        
+        if (amount>0 && address(collateralToken)!=address(0x0)) require(collateralToken.transfer(msg.sender,uint256(amount)),"Transfer failed");
+ 
+    }
+`
+
+    ** The withdrawCollateral function allows a user to withdraw their available collateral. It takes one parameter, an amount, which can be zero or positive. The function first checks that the amount is not negative and then calls the _bookKeeping function. If the requested amount is zero, the function withdraws all the user's available collateral. Otherwise, it checks that the user has enough available collateral to withdraw the requested amount. If so, the amount is subtracted from the user's available collateral and transferred to the user's address. If the transfer fails, the function reverts.
+
+
+
+ `
+        Start a new epoch external call, free to call
+`
+
+`
+
+    function startNextEpoch() external  {
+        _startNextEpoch();
+    }
+    
+
+    function withdrawAdminFees(int256 amount) external {
+        require (msg.sender==admin,"Only admin");
+        require (amount<=adminFees,"Not enough funds");
+        adminFees-=amount;
+        if (address(collateralToken)!=address(0x0)) require(collateralToken.transfer(msg.sender,uint256(amount)),"Transfer failed");
+    }
+
+`
+
+    ** The startNextEpoch function is a public function that allows anyone to start a new epoch. It simply calls the _startNextEpoch function which is an internal function. The purpose of starting a new epoch is to update the variables and state of the contract to reflect the start of a new period of time. This may involve changing the interest rate, updating the pool balances, or performing other necessary actions.
+
+    The withdrawAdminFees function, on the other hand, is a function that only the admin can call. It allows the admin to withdraw admin fees from the contract. The amount parameter specifies the amount of fees to withdraw, which must be less than or equal to the current balance of admin fees in the contract.
+
+    Once the amount is verified, the adminFees variable is updated to reflect the withdrawal. If the contract uses a collateral token, the function also attempts to transfer the withdrawn amount to the admin's address using the transfer function of the collateralToken contract. If the transfer fails, an error message is thrown.
+
+
+    
+`
+
+    startNextEpoch()
+
+`
+*  This function is used to start a new epoch. It can be called by anyone and is used to move the protocol into the next epoch.
+
+`
+
+    withdrawAdminFees(int256 amount)
+`
+
+*   This function is used to withdraw admin fees from the protocol. It can only be called by the admin and requires the amount to be withdrawn to be less than or equal to the admin fees. If the protocol is using a collateral token, then a transfer of the withdrawn amount is attempted to the admin's address.
+
+`
+
+    addPool(int256 leverage, bool isLiquidityPool)
+
+`
+
+*     This internal function is used to add a new pool to the protocol. It requires a leverage ratio and a boolean flag to specify whether the pool is a liquidity pool or not.
+
+`
+
+    setEpochPeriods(uint256 _epochPeriod, uint256 _waitPeriod)
+
+`
+    **   This function is used to set the epoch period and waiting period. It can only be called by the admin and requires the periods to be greater than zero and the wait period to be less than or equal to the epoch period. Once set, the SetEpochPeriods event is emitted.
+
+`
+
+    setFees(int256 _TRANSACTION_FEE, int256 _ADMIN_FEES, int256 _LIQUIDITYPOOL_FEES)
+`
+
+    **  This function is used to set the transaction fees and the division between the admin and the liquidity pools. It can only be called by the admin and requires the fees to be greater than or equal to zero, the transaction fee to be less than or equal to 2%, and the sum of the admin and liquidity pool fees to be equal to PRECISION. Once set, the SetFees event is emitted.
