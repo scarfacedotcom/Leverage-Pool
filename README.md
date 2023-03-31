@@ -357,5 +357,87 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
     *  This function performs bookkeeping for a user. It is an external function that can be called by anyone. It simply calls the internal _bookKeeping() function to perform the bookkeeping for the user who called the function.
 
+`
+        Schedule a deposit for the next epoch
+`
+
+
+`
+   
+    function deposit(int256 amount, uint256 pool) external {
+        require (pool<pools.length,"Pool not initialized");
+        require (amount>=0,"amount needs to be positive");
+        _bookKeeping(msg.sender);
+
+        UserInfo storage info = userInfo[msg.sender];
+
+        // Try to pay from the withdrawableCollateral first
+        int256 transferAmount = amount;
+        if (info.withdrawableCollateral>0) {
+            if (transferAmount>info.withdrawableCollateral) {
+                transferAmount-=info.withdrawableCollateral;
+                info.withdrawableCollateral=0;
+            } else {
+                info.withdrawableCollateral-=transferAmount;
+                transferAmount=0;
+            }
+        }
+        if (transferAmount>0 && address(collateralToken)!=address(0x0)) require(collateralToken.transferFrom(msg.sender,address(this),uint256(transferAmount)),"Transfer failed");
+
+        Action memory action;
+        action.epoch = _getNextEpoch();
+        action.pool = pool;
+        action.depositAmount = amount;
+        info.actions.push(action);
+
+        PoolEpochData storage data = poolEpochData[action.epoch][action.pool];
+        data.deposits+=amount;
+        emit DepositInPool(msg.sender,amount,pool,action.epoch);
+    }
+
+
+`
+
+    ** This function is used to schedule a deposit for the next epoch in a particular pool. 
+
+    The deposit function takes two arguments - amount and pool - which represent the amount of collateral to deposit and the pool index, respectively.
+    The function first performs some checks to ensure that the pool is initialized and the deposit amount is positive.
+    The _bookKeeping function is called to update the user's state.
+    The user's UserInfo struct is retrieved from the userInfo mapping using msg.sender.
+    The function then attempts to pay from the user's withdrawableCollateral field first. If there is enough collateral in this field to cover the deposit, the function updates the user's withdrawableCollateral field and does not transfer any collateral from the user. If there is not enough collateral in this field to cover the deposit, the function subtracts the remaining amount from the transferAmount variable, effectively subtracting the remaining amount from the user's deposit amount, and sets the withdrawableCollateral field to 0.
+    If there is any remaining amount to be transferred, and if collateralToken is not the null address, the function calls the transferFrom function on the collateralToken contract to transfer the collateral from the user to the contract.
+    The function creates an Action struct with the epoch, pool, and depositAmount fields set to the next epoch, the pool index, and the deposit amount, respectively. This struct is added to the actions array of the user's UserInfo struct.
+    The function updates the deposits field of the PoolEpochData struct for the current epoch and pool with the deposit amount.
+    Finally, the function emits a DepositInPool event with the user's address, deposit amount, pool index, and epoch as arguments.
+    Overall, this function is used to schedule a deposit for the next epoch in a particular pool. It allows users to deposit collateral and participate in the system's trading activities.
+
+`
+        Schedule a withdraw for the next epoch
+`
+
+`
+
+    function withdraw(int256 amount, uint256 pool) external  {
+        require (pool<pools.length,"Pool not initialized");
+        require (amount>=0,"amount needs to be positive");
+        _bookKeeping(msg.sender);
+        
+        UserInfo storage  info =  userInfo[msg.sender];
+        require(info.shares[pool]>=amount,"No enough shares");
+        
+        info.shares[pool]-=amount;
+        Action memory action;
+        action.epoch = _getNextEpoch();
+        action.pool = pool;
+        action.withdrawAmount = amount;
+        info.actions.push(action);
+        
+        PoolEpochData storage data = poolEpochData[action.epoch][action.pool];
+        data.withdrawals+=amount;
+        emit WithdrawFromPool(msg.sender,amount,pool,action.epoch);
+    } 
+`
+
+    ** The withdraw function allows a user to schedule a withdrawal for the next epoch. It takes two parameters, an amount and a pool ID. The function checks that the pool ID is valid and that the requested amount is not negative. Then, it calls the _bookKeeping function, which performs some internal bookkeeping. Next, the function checks that the user has enough shares in the pool to withdraw the requested amount. If so, the shares are reduced by the requested amount, an action is created and added to the user's actions array, and the amount is added to the total withdrawals for the pool epoch data. Finally, the function emits a WithdrawFromPool event to indicate the withdrawal.
 
     
