@@ -688,3 +688,20 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
     ** The fourth step involves deposits and withdrawals. The function calculates the actual leverage of each pool and applies a transaction fee based on the actual leverage. If a deposit is made, the function calculates the number of shares to give to the depositor and updates the pool's share count and collateral. If a withdrawal is made, the function calculates the number of shares to burn and updates the pool's share count and collateral.
 
     ** Finally, the function calculates the total fees charged during the epoch and distributes them proportionally among the liquidity pools.
+
+`
+
+        _addPool(int256 leverage, bool isLiquidityPool)
+
+`
+
+    ** Adds a new pool to the contract with the specified leverage and whether it is a liquidity pool. This function can only be called by the contract admin. The leverage cannot be zero and if the pool is a liquidity pool, the leverage must be positive. It also checks if a pool with the same leverage and isLiquidityPool value already exists before adding the new pool.
+
+
+`
+
+    _calculatePoolAmounts()
+
+`
+
+    **Calculates the total amounts of collateral in each pool and the leverage for longs/shorts/liquidity pool. This function does not modify any state and only returns a PoolAmounts struct containing the calculated values. The struct contains the total collateral amounts for longs, shorts, and the liquidity pool, as well as the corresponding leverage ratios. The leverage ratios are calculated based on the collateral and the total leverage for each pool. If the total collateral for longs is greater than that for shorts, the liquidity pool is used to balance the difference, and vice versa.
