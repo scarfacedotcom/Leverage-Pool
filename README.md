@@ -564,3 +564,100 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 `
 
     **  This function is used to set a new funding rate model. Only the current admin is allowed to call this function. It takes a new funding rate model address as an input parameter and sets it as the new funding rate model. The input parameter must be a valid address of a contract implementing the IFundingRateModel interface.
+
+`
+
+    function initializePools() external
+
+`
+
+    ** This function adds default pools to the pools array if the pools array is empty. It adds six default pools with different leverage amounts.
+
+`
+
+    calculatePoolAmounts()
+
+
+`
+
+
+    ** This external view function calculates the total amounts over all pools and the leverage for longs/shorts/liquidity pool. It requires no parameters and returns a PoolAmounts struct.
+
+`
+    getUserShares(address user)
+
+`
+
+    **This external function gets the number of shares for the given user per pool. It requires the address of the user as a parameter and updates bookkeeping information. It returns an array of int256 values representing the number of shares per pool.
+
+`
+
+    getUserSharesView(address user)
+
+`
+
+    **This external view function gets the number of shares for the given user per pool. It requires the address of the user as a parameter but does not update bookkeeping information. It returns an array of int256 values representing the number of shares per pool.
+
+`
+
+    getUserDeposits(address user)
+
+`
+
+    **This external function gets the collateral owned for the given user per pool. It requires the address of the user as a parameter and updates bookkeeping information. It returns an array of int256 values representing the collateral per pool.
+
+`
+
+    getUserDepositsView(address user)
+
+`
+
+    **This external view function gets the collateral owned for the given user per pool. It requires the address of the user as a parameter but does not update bookkeeping information. It returns an array of int256 values representing the collateral per pool.
+
+`
+
+    getUserActions(address user)
+
+`
+
+    **This external function gets the pending actions for the given user. It requires the address of the user as a parameter and updates bookkeeping information. It returns an array of Action structs.
+
+`
+
+    getUserActionsView(address user)
+
+`
+
+    ** This external view function gets the pending actions for the given user. It requires the address of the user as a parameter but does not update bookkeeping information. It returns an array of Action structs.
+
+`
+
+    getWithdrawableCollateral(address user)
+
+`
+
+    **This external function gets the withdrawable collateral for the given user. It requires the address of the user as a parameter and updates bookkeeping information. It returns an int256 value representing the withdrawable collateral.
+
+`
+
+    getWithdrawableCollateralView(address user)
+
+`
+
+    **This external view function gets the withdrawable collateral for the given user. It requires the address of the user as a parameter but does not update bookkeeping information. It returns an int256 value representing the withdrawable collateral.
+
+`
+
+    withdrawAdminFees(int256 amount)
+
+`
+
+    **This external function is used to withdraw admin fees from the protocol. It can only be called by the admin and requires the amount to be withdrawn to be less than or equal to the admin fees. If the protocol is using a collateral token, then a transfer of the withdrawn amount is attempted to the admin's address.
+
+`
+
+    _addPool(int256 leverage, bool isLiquidityPool)
+
+`
+
+    **This internal function is used to add a new pool to the protocol. It requires a leverage ratio and a boolean flag to specify whether the pool is a liquidity pool or not. It does not return any values.
