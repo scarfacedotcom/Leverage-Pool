@@ -531,3 +531,36 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 `
 
     **  This function is used to set the transaction fees and the division between the admin and the liquidity pools. It can only be called by the admin and requires the fees to be greater than or equal to zero, the transaction fee to be less than or equal to 2%, and the sum of the admin and liquidity pool fees to be equal to PRECISION. Once set, the SetFees event is emitted.
+
+
+`
+
+    setAdmin(address newAdmin) external
+
+`
+
+    **  This function is used to set a new Admin. Only the current admin is allowed to call this function. It takes a new admin address as an input parameter and sets it as the new admin. It requires that the new admin address is not equal to zero.
+
+`
+
+    setChangeCap(int256 _CHANGE_CAP) external
+
+`
+
+    **  This function is used to set a new CHANGE_CAP value. Only the current admin is allowed to call this function. It takes an integer value _CHANGE_CAP as an input parameter and sets it as the new CHANGE_CAP value.
+
+`
+
+    setOracle(address newOracle) external
+
+`
+
+    **This function is used to set a new Oracle. Only the current admin is allowed to call this function. It takes a new oracle address as an input parameter and sets it as the new oracle. The input parameter must be a valid address of a contract implementing the IOracle interface.
+
+`
+
+    setFundingRateModel(address newFundingRateModel) external
+
+`
+
+    **  This function is used to set a new funding rate model. Only the current admin is allowed to call this function. It takes a new funding rate model address as an input parameter and sets it as the new funding rate model. The input parameter must be a valid address of a contract implementing the IFundingRateModel interface.
