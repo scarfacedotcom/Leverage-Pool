@@ -498,14 +498,16 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
     startNextEpoch()
 
 `
-*  This function is used to start a new epoch. It can be called by anyone and is used to move the protocol into the next epoch.
+
+
+    ** This function is used to start a new epoch. It can be called by anyone and is used to move the protocol into the next epoch.
 
 `
 
     withdrawAdminFees(int256 amount)
 `
 
-*   This function is used to withdraw admin fees from the protocol. It can only be called by the admin and requires the amount to be withdrawn to be less than or equal to the admin fees. If the protocol is using a collateral token, then a transfer of the withdrawn amount is attempted to the admin's address.
+    ** This function is used to withdraw admin fees from the protocol. It can only be called by the admin and requires the amount to be withdrawn to be less than or equal to the admin fees. If the protocol is using a collateral token, then a transfer of the withdrawn amount is attempted to the admin's address.
 
 `
 
@@ -513,14 +515,15 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 
 `
 
-*     This internal function is used to add a new pool to the protocol. It requires a leverage ratio and a boolean flag to specify whether the pool is a liquidity pool or not.
+    ** This internal function is used to add a new pool to the protocol. It requires a leverage ratio and a boolean flag to specify whether the pool is a liquidity pool or not.
 
 `
 
     setEpochPeriods(uint256 _epochPeriod, uint256 _waitPeriod)
 
 `
-    **   This function is used to set the epoch period and waiting period. It can only be called by the admin and requires the periods to be greater than zero and the wait period to be less than or equal to the epoch period. Once set, the SetEpochPeriods event is emitted.
+
+    ** This function is used to set the epoch period and waiting period. It can only be called by the admin and requires the periods to be greater than zero and the wait period to be less than or equal to the epoch period. Once set, the SetEpochPeriods event is emitted.
 
 `
 
