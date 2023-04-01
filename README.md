@@ -705,3 +705,81 @@ Frax is the first fractional-algorithmic stablecoin protocol. Frax is open-sourc
 `
 
     **Calculates the total amounts of collateral in each pool and the leverage for longs/shorts/liquidity pool. This function does not modify any state and only returns a PoolAmounts struct containing the calculated values. The struct contains the total collateral amounts for longs, shorts, and the liquidity pool, as well as the corresponding leverage ratios. The leverage ratios are calculated based on the collateral and the total leverage for each pool. If the total collateral for longs is greater than that for shorts, the liquidity pool is used to balance the difference, and vice versa.
+
+`
+ 
+        function _getNextEpoch()
+
+`
+
+    **This internal function calculates the next epoch a user can deposit or withdraw funds in. It checks if the current block timestamp is greater than or equal to the sum of epoch start time, epoch period, and wait period. If yes, it sets the nextEpoch to the current epoch plus two, indicating that the user can only deposit or withdraw funds in the epoch after the next one. Otherwise, it sets the nextEpoch to the current epoch plus one, indicating that the user can deposit or withdraw funds in the next epoch.
+
+
+`
+
+    Function getPrice()
+
+`
+
+    **This function retrieves the price from the oracle. If an oracle contract has been set, it calls the getPrice() function of the oracle. Otherwise, it returns the current block timestamp, which is used for testing purposes.
+
+
+`
+
+    Function getRates(amounts: PoolAmounts)
+
+`
+
+    **This internal function returns a Rates struct that contains the long funding rate, short funding rate, liquidity pool funding rate, rebalance rate, and rebalance liquidity pool rate. It calls the getFundingRate() function of the fundingRateModel contract if it has been set, passing it the amounts struct as arguments.
+
+    The amounts struct which contains the amounts of long positions, short positions, liquidity pool positions, and rebalancing positions. The Rates struct likely contains floating-point values that represent the funding and rebalance rates.
+
+
+# TestOracle Contract
+
+`
+
+    interface IOracle {
+        function getPrice() external view returns (uint256);
+        }
+
+    contract TestOracle is IOracle {
+        address admin;
+        uint256 price=10**18;
+        
+        constructor() {
+            admin = msg.sender;
+        }
+        
+        function getPrice() override external view returns (uint256) {
+            return price;
+        }
+        function setPrice(uint256 _price) external {
+            require(admin==msg.sender,"Only admin");
+            price = _price;
+        }
+    }
+
+`
+
+    ** The TestOracle contract is an implementation of the IOracle interface. It has only two functions, getPrice(), which returns the current price of an asset as a uint256 value. This price can be set by calling the setPrice() function, which is only callable by the contract's administrator.
+
+`
+
+    interface IFundingRateModel {
+        function getFundingRate(int256 _longAmount,int256 _shortAmount,int256 _liquidityPoolAmount,int256 _rebalanceAmount) external view returns (int256,int256,int256,int256,int256);
+        }
+
+    contract BaseInterestRateModel is IFundingRateModel {}
+
+`
+
+    ** contract for a base interest rate model that implements the IFundingRateModel interface. The interface has a function called getFundingRate which takes four input parameters and returns five values, all of type int256.
+
+    The BaseInterestRateModel contract has several state variables, including an admin address, some constants, and several variables that can be modified through setter functions. The constructor sets the admin variable to the address that created the contract.
+
+    The setMultipliers function allows the admin to set the FUNDING_MULTIPLIER and REBALANCING_MULTIPLIER variables. The setMaxRebalanceRate function allows the admin to set the MAX_REBALANCE_RATE variable.
+
+    The getFundingRate function calculates funding rates for long positions, short positions, and liquidity pools. It also calculates rebalancing rates for liquidity pools. The calculations depend on the input parameters passed to the function, which are the amount of long positions, short positions, liquidity pool, and rebalance amount.
+
+    The last part of the code is a contract for a simple time-locked wallet. The unlockTime variable is set during contract creation and specifies the time when the wallet can be unlocked. The owner variable is set to the creator of the contract. The withdraw function can only be called by the owner of the contract and can only be executed if the unlockTime has passed. When the function is called, the contract emits a Withdrawal event with the amount and the timestamp, and transfers the balance to the owner.
